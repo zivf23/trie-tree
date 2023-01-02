@@ -31,7 +31,7 @@ bool searchT(TrieNode* root, string key);
 bool searchC(TrieNode* root, char ch);
 void suggestionsRec(TrieNode* root, string currPrefix);
 int printAutoSuggestionsT(TrieNode* root, string query);
-void printT(TrieNode* t, int level);
+void printT(TrieNode* t, string q);
 
 
 
@@ -45,7 +45,7 @@ public:
 	bool delW(string wrd) { return delT(root, wrd); }
 	int printAutoSuggestions(string wrd) { return printAutoSuggestionsT(root, wrd); }
 	bool search(string key) { return searchT(root, key); }
-	void printTrie() { printT(root, 0); }
+	void printTrie() { printT(root, ""); }
 
 };
 
