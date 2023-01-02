@@ -56,22 +56,28 @@ bool delT(TrieNode* root, string key)
 bool delR(TrieNode* prev, TrieNode* son, string key)
 {
 	int index = CHAR_TO_INDEX(key.front());
-	if (key.length()==0)
+	if (son->children[index] != nullptr && key.length() > 1) //going down in the tree
+		delR(son, son->children[index], key.substr(1));
+
+	if (key.length() <= 1) // working on the last node
 	{
-		if (prev->children[index]->isWordEnd==true)
+		if (prev->children[index]->isWordEnd == true && !isLastNode(son))
 		{
 			prev->children[index]->isWordEnd = false;
 			return true;
 		}
-		else
-		{
-			if(isLastNode(son->children[index]) == true)
-			{
-				prev->children[index] = nullptr;
-				delete prev->children[index];
-			}
-		}
 	}
+
+	if(isLastNode(son->children[index]) && !son->children[index]->isWordEnd)
+		{
+			prev->children[index] = nullptr;
+			delete prev->children[index];
+		}
+	else
+	{
+		son->children[index]->isWordEnd = false;
+	}
+	
 	return true;
 }
 
