@@ -48,47 +48,31 @@ bool delT(TrieNode* root, string key)
 		return false;
 {
 		delR(root, root->children[CHAR_TO_INDEX(key.front())], key.substr(1));
-	
-	
 }
-	
-	/*
-	if (searchT(root, key))
-	{
-		{// mark it as not a end word - "del it"
-			TrieNode* ptr = root;
-			
-			 //* get to the final char of the word.
-			
-			for (int i = 0; i < key.length(); i++)
-			{
-				ptr = ptr->children[CHAR_TO_INDEX(key[i])];
-			}
-			//If he the last node - delete.
-			if (!isLastNode(ptr)) 
-			ptr->isWordEnd = false;
-			else
-			{
-				
-			}
-		}
-		return true;
-	}
-	else
-	{
-		return false;
-	}*/
 }
 
 
 
 bool delR(TrieNode* prev, TrieNode* son, string key)
 {
+	int index = CHAR_TO_INDEX(key.front());
 	if (key.length()==0)
 	{
-		
+		if (prev->children[index]->isWordEnd==true)
+		{
+			prev->children[index]->isWordEnd = false;
+			return true;
+		}
+		else
+		{
+			if(isLastNode(son->children[index]) == true)
+			{
+				prev->children[index] = nullptr;
+				delete prev->children[index];
+			}
+		}
 	}
-	return false;
+	return true;
 }
 
 bool searchT(TrieNode* root, string key)
