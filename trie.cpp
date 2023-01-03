@@ -129,16 +129,18 @@ void suggestionsRec(TrieNode* root, string currPrefix)
 int printAutoSuggestionsT(TrieNode* root, string currPrefix)
 {
 	string temp = currPrefix;
-	while (temp.size() > 0)
-		if (root->children[temp.front()] != nullptr)
+	while (!temp.empty())
+	{
+		if (root->children[CHAR_TO_INDEX(temp.front())])
 		{
-			root = root->children[temp.front()];
+			root = root->children[CHAR_TO_INDEX(temp.front())];
 			temp = temp.substr(1);
 		}
 		else return 0; //Not Found
+	}
 
 	suggestionsRec(root, currPrefix);
-
+	return 6;
 }
 
 
