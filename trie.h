@@ -26,7 +26,7 @@ TrieNode* getNode(void);
 bool isLastNode(TrieNode* node);
 bool insertT(TrieNode* root, string key);
 bool delT(TrieNode* root, string key);
-bool delR(TrieNode* prev, TrieNode* root, string key);
+bool delR(TrieNode* prev, string key);
 bool searchT(TrieNode* root, string key);
 bool searchC(TrieNode* root, char ch);
 void suggestionsRec(TrieNode* root, string currPrefix);

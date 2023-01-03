@@ -51,31 +51,61 @@ bool delT(TrieNode* root, string key)
 	if (!searchT(root, key))
 		return false;
 
-	delR(root, root->children[CHAR_TO_INDEX(key.front())], key.substr(1));
+	delR(root, key);
 
 }
 
 
 
-bool delR(TrieNode* prev, TrieNode* son, string key)
+bool delR(TrieNode* root, string key)
 {
-	int index = CHAR_TO_INDEX(key.front());
-	if (son->children[index] != nullptr && key.length() > 1) //going down in the tree
-		delR(son, son->children[index], key.substr(1));
-
-	if (key.length() <= 1) // working on the last node
+	if (key.empty())
 	{
-		
-			son->children[index]->isWordEnd = false;
+		if (!isLastNode(root)) //If he the prefix of another word
+		{
+			root->isWordEnd = false;
+			return false; //the father know to end the program
+		}
+		else //if he a leaf - delte
+		{		//the father know to delete himself if he a leaf
+			return true; 
+		}
 	}
 
-	if(isLastNode(son->children[index]) && !son->children[index]->isWordEnd)
-		{
-			prev->children[index] = nullptr;
-			delete prev->children[index];
-		}
+	if (delR(root->children[CHAR_TO_INDEX(key.front())], key.substr(1))) //delete the rests nodes 
+	//if true - delte himself if false - end the program
+	{
+		delete root->children[CHAR_TO_INDEX(key.front())];
+		root->children[CHAR_TO_INDEX(key.front())] = nullptr;
+		return (isLastNode(root));
+	}
 
-	return true;
+
+
+
+
+
+
+
+
+
+	//int index = CHAR_TO_INDEX(key.front());
+	//if (son->children[index] != nullptr && key.length() > 1) //going down in the tree
+	//	delR(son, son->children[index], key.substr(1));
+
+	//if (key.length() <= 1) // working on the last node
+	//{
+	//	
+	//		son->children[index]->isWordEnd = false;
+	//}
+
+	//if(isLastNode(son->children[index]) && !son->children[index]->isWordEnd)
+	//	{
+	//		prev->children[index] = nullptr;
+	//		delete prev->children[index];
+	//	}
+
+	//return true;
 }
 
 bool searchT(TrieNode* root, string key)
@@ -140,7 +170,6 @@ int printAutoSuggestionsT(TrieNode* root, string currPrefix)
 	}
 
 	suggestionsRec(root, currPrefix);
-	return 6;
 }
 
 
