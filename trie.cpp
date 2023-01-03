@@ -50,16 +50,16 @@ bool delT(TrieNode* root, string key)
 {
 	if (!searchT(root, key))
 		return false;
-{
-		delR(root, root->children[CHAR_TO_INDEX(key.front())], key.substr(1));
-}
+
+	delR(root, root->children[CHAR_TO_INDEX(key.front())], key.substr(1));
+
 }
 
 
 
 bool delR(TrieNode* prev, TrieNode* son, string key)
 {
-	int index = CHAR_TO_INDEX(key[0]);
+	int index = CHAR_TO_INDEX(key.front());
 	if (son->children[index] != nullptr && key.length() > 1) //going down in the tree
 		delR(son, son->children[index], key.substr(1));
 
@@ -109,63 +109,107 @@ bool searchC(TrieNode* root, char ch)
 
 void suggestionsRec(TrieNode* root, string currPrefix)
 {
-	
+	//If arrived to a life- print and stop
+	if (isLastNode(root))
+	{
+		cout << currPrefix<<endl;
+		return;
+	}
+	//if this is a end of word - print 
+	if (root->isWordEnd)
+		cout << currPrefix << endl;
+	//check the rest of sons
+	for (int i = 0; i < ALPHABET_SIZE; i++)
+	{
+		if (root->children[i] != nullptr)
+			suggestionsRec(root->children[i], currPrefix +(char)('a'+i));
+	}
 }
 
 int printAutoSuggestionsT(TrieNode* root, string currPrefix)
 {
-	if (searchT(root, currPrefix))
-	{
+	string temp = currPrefix;
+	while (temp.size() > 0)
+		if (root->children[temp.front()] != nullptr)
+		{
+			root = root->children[temp.front()];
+			temp = temp.substr(1);
+		}
+		else return 0; //Not Found
 
-		TrieNode* ptr = root;
-		TrieNode* ptr2 = root;
-		for (int i = 0; i < currPrefix.length(); i++)
-		{
-			ptr = ptr->children[CHAR_TO_INDEX(currPrefix[i])];
-		}
-		while (!isLastNode(ptr))
-		{
-			cout << currPrefix;
-			ptr2 = ptr;
-			for (int i = 0; i < ALPHABET_SIZE; i++)
-			{
-				if (ptr2->children[i] != nullptr)
-				{
-					cout << ptr2->children[i];// print the next char found
-					ptr2 = ptr2->children[i];
-					if (ptr2->isWordEnd == true)
-					{
-						cout << endl;
-						if (!isLastNode(ptr2)) {
-							cout << currPrefix;
-							i = 0;
-						}
-						else
-						{
-							ptr2 = ptr;
-						}
-					}
-				}
-			}
-		}
-		return 1;
-	}
-	else
-	{
-		return 0; 
-	}
+	suggestionsRec(root, currPrefix);
+
 }
 
-void printT(TrieNode* node, string prefix)
+
+
+
+
+
+
+//	if (searchT(root, currPrefix))
+//	{
+//
+//		TrieNode* ptr = root;
+//		TrieNode* ptr2 = root;
+//		for (int i = 0; i < currPrefix.length(); i++)
+//		{
+//			ptr = ptr->children[CHAR_TO_INDEX(currPrefix[i])];
+//		}
+//		while (!isLastNode(ptr))
+//		{
+//			cout << currPrefix;
+//			ptr2 = ptr;
+//			for (int i = 0; i < ALPHABET_SIZE; i++)
+//			{
+//				if (ptr2->children[i] != nullptr)
+//				{
+//					cout << ptr2->children[i];// print the next char found
+//					ptr2 = ptr2->children[i];
+//					if (ptr2->isWordEnd == true)
+//					{
+//						cout << endl;
+//						if (!isLastNode(ptr2)) {
+//							cout << currPrefix;
+//							i = 0;
+//						}
+//						else
+//						{
+//							ptr2 = ptr;
+//						}
+//					}
+//				}
+//			}
+//		}
+//		return 1;
+//	}
+//	else
+//	{
+//		return 0; 
+//	}
+//}
+
+void printT(TrieNode* node,string sp)
 {
-	if (searchT(node, prefix)) {
-		if (node->isWordEnd) {
-			cout << prefix << endl;
-		}
-		for (int i = 0; i < ALPHABET_SIZE; i++) {
-			if (node->children[i] != nullptr) {
-				printT(node->children[i], prefix + (char)('a' + i));
-			}
+	for (int i = 0; i < ALPHABET_SIZE; i++)
+	{
+		if (node->children[i] != nullptr)
+		{
+			cout <<sp << (char)('a'+i) << ":\n";
+			printT(node->children[i], sp+" ");
 		}
 	}
 }
+//void printT(TrieNode* node, string prefix)
+//{
+//	if (searchT(node, prefix)) {
+//		if (node->isWordEnd) {
+//			cout << prefix << endl;
+//		}
+//		for (int i = 0; i < ALPHABET_SIZE; i++) {
+//			if (node->children[i] != nullptr) {
+//				printT(node->children[i], prefix + (char)('a' + i));
+//			}
+//		}
+//	}
+//}
